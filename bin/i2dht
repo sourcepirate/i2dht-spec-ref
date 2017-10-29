@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+import sys
+import argparse
+from i2dht import bootstrap
+
+HOST = "0.0.0.0"
+
+parser = argparse.ArgumentParser(description="Bootstrap demo for P2P kademlia dht")
+parser.add_argument('-p', "--port", help= "port")
+parser.add_argument('-b', "--bootstrap", help="Bootstrap nodes", default="")
+parser.add_argument("-f", "--find", help="Find node id")
+    
+args = parser.parse_args()
+
+nodes = []
+
+_boot = args.bootstrap
+if _boot:
+    _nodes = _boot.split(",")
+    for node in _nodes:
+        _id, ip, port = node.split(":")
+        print(ip, port)
+        nodes.append((int(_id), ip, int(port)))
+
+_find = args.find
+
+if len(sys.argv) < 2:
+    parser.print_help()
+else:
+    bootstrap(HOST, int(args.port), bootstrap_node=nodes, find_node=_find)
